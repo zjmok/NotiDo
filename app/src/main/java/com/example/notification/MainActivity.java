@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
                         .setTitle("提示")
-                        .setMessage("本程序极度小巧(安装包约17KB)，比\"小而美\"的微信(约250MB)的 1/15000 还小，只显示通知，没有多余功能，后台运行几乎不耗电。\n建议(特别针对国内魔改定制ROM)：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限。如过滤规则设置为重要，锁屏通知权限等；")
+                        .setMessage("本 APP 极度小巧（安装包不到 20 KB，安装后存储占用不到 200 KB）。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限。如过滤规则设置为重要，锁屏通知权限等；")
                         .setPositiveButton("确定", null)
                         .show();
             }
@@ -56,9 +56,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(mContext)
                         .setTitle("提示")
-                        .setMessage("清空内容, 并移除通知?")
-                        .setNegativeButton("取消", null)
-                        .setPositiveButton("确定", (dialog, which) -> {
+                        .setMessage("是否移除通知？\n移除的同时将会关闭应用程序。")
+                        .setNeutralButton("清空内容并移除", (dialog, which) -> {
                             etTitle.setText("");
                             etMessage.setText("");
 
@@ -67,6 +66,13 @@ public class MainActivity extends Activity {
                             editor.putString("message", "");
                             editor.apply();
 
+                            Intent intent = new Intent(mContext, ForegroundService.class);
+                            MainActivity.this.stopService(intent);
+
+                            MainActivity.this.finish();
+                        })
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("移除", (dialog, which) -> {
                             Intent intent = new Intent(mContext, ForegroundService.class);
                             MainActivity.this.stopService(intent);
 
@@ -100,10 +106,10 @@ public class MainActivity extends Activity {
 
                 Intent intent = new Intent(mContext, ForegroundService.class);
                 if (Objects.equals(title.trim(), "") && Objects.equals(message.trim(), "")) {
-                    Toast.makeText(mContext, "无内容", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "至少保留一项内容", Toast.LENGTH_SHORT).show();
                 } else {
-                    intent.putExtra("title", Objects.equals(title.trim(), "") ? "无标题" : title);
-                    intent.putExtra("message", Objects.equals(message.trim(), "") ? "无内容" : message);
+                    intent.putExtra("title", Objects.equals(title.trim(), "") ? "-" : title);
+                    intent.putExtra("message", Objects.equals(message.trim(), "") ? "-" : message);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         MainActivity.this.startForegroundService(intent);
