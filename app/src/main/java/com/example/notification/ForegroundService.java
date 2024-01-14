@@ -41,7 +41,7 @@ public class ForegroundService extends Service {
                 new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         // 通知对象
         Notification notification = notificationBuilder
-                .setSmallIcon(android.R.drawable.ic_menu_today)
+                .setSmallIcon(android.R.drawable.ic_menu_edit)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(false)

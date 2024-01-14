@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,7 +23,7 @@ public class MainActivity extends Activity {
 
     private SharedPreferences sp;
 
-    private final Context mContext = this;
+    private final Activity activity = this;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -38,7 +39,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.iv_info).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(mContext)
+                new AlertDialog.Builder(activity)
                         .setTitle("提示")
                         .setMessage("本 APP 极度小巧（安装包不到 20 KB，安装后存储占用不到 200 KB）。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限。如过滤规则设置为重要，锁屏通知权限等；")
                         .setPositiveButton("确定", null)
@@ -54,31 +55,44 @@ public class MainActivity extends Activity {
         findViewById(R.id.tv_clear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(mContext)
+                new AlertDialog.Builder(activity)
                         .setTitle("提示")
-                        .setMessage("是否移除通知？\n移除的同时将会关闭应用程序。")
-                        .setNeutralButton("清空内容并移除", (dialog, which) -> {
-                            etTitle.setText("");
-                            etMessage.setText("");
+                        .setMessage("是否移除通知？")
+                        .setNeutralButton("清空内容并移除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                etTitle.setText("");
+                                etMessage.setText("");
 
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("title", "");
-                            editor.putString("message", "");
-                            editor.apply();
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("title", "");
+                                editor.putString("message", "");
+                                editor.apply();
 
-                            Intent intent = new Intent(mContext, ForegroundService.class);
-                            MainActivity.this.stopService(intent);
+                                Intent intent = new Intent(activity, ForegroundService.class);
+                                activity.stopService(intent);
 
-                            MainActivity.this.finish();
+                                activity.finish();
+                            }
                         })
                         .setNegativeButton("取消", null)
-                        .setPositiveButton("移除", (dialog, which) -> {
-                            Intent intent = new Intent(mContext, ForegroundService.class);
-                            MainActivity.this.stopService(intent);
+                        .setPositiveButton("移除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(activity, ForegroundService.class);
+                                activity.stopService(intent);
 
-                            MainActivity.this.finish();
+                                activity.finish();
+                            }
                         })
                         .show();
+            }
+        });
+
+        findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.finish();
             }
         });
 
@@ -88,10 +102,10 @@ public class MainActivity extends Activity {
 
                 // Android 33 请求打开通知权限
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    NotificationManager notificationManager = MainActivity.this.getSystemService(NotificationManager.class);
+                    NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
                     boolean enable = notificationManager.areNotificationsEnabled();
                     if (!enable) {
-                        MainActivity.this.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 9527);
+                        activity.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 9527);
                         return;
                     }
                 }
@@ -99,25 +113,24 @@ public class MainActivity extends Activity {
                 String title = etTitle.getText().toString();
                 String message = etMessage.getText().toString();
 
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("title", title);
-                editor.putString("message", message);
-                editor.apply();
-
-                Intent intent = new Intent(mContext, ForegroundService.class);
                 if (Objects.equals(title.trim(), "") && Objects.equals(message.trim(), "")) {
-                    Toast.makeText(mContext, "至少保留一项内容", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "至少保留一项内容", Toast.LENGTH_SHORT).show();
                 } else {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("title", title);
+                    editor.putString("message", message);
+                    editor.apply();
+
+                    Intent intent = new Intent(activity, ForegroundService.class);
                     intent.putExtra("title", Objects.equals(title.trim(), "") ? "-" : title);
                     intent.putExtra("message", Objects.equals(message.trim(), "") ? "-" : message);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        MainActivity.this.startForegroundService(intent);
+                        activity.startForegroundService(intent);
                     } else {
-                        MainActivity.this.startService(intent);
+                        activity.startService(intent);
                     }
-
-                    MainActivity.this.finish();
+                    activity.finish();
                 }
             }
         });
@@ -138,7 +151,7 @@ public class MainActivity extends Activity {
             if (Objects.equals(permissions[0], Manifest.permission.POST_NOTIFICATIONS)
                     && grantResults != null && grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(mContext, "已打开通知权限", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "已打开通知权限", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -161,7 +174,7 @@ public class MainActivity extends Activity {
         onMultiClick(new Function() {
             @Override
             public void continueAction(int size) {
-                Toast.makeText(mContext, "快速再按 " + size + " 次 退出程序", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "快速再按 " + size + " 次 退出程序", Toast.LENGTH_SHORT).show();
             }
 
             @Override
