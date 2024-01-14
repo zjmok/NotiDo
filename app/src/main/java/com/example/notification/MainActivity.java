@@ -70,9 +70,9 @@ public class MainActivity extends Activity {
                                 editor.apply();
 
                                 Intent intent = new Intent(activity, ForegroundService.class);
-                                activity.stopService(intent);
+                                stopService(intent);
 
-                                activity.finish();
+                                finish();
                             }
                         })
                         .setNegativeButton("取消", null)
@@ -80,9 +80,9 @@ public class MainActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(activity, ForegroundService.class);
-                                activity.stopService(intent);
+                                stopService(intent);
 
-                                activity.finish();
+                                finish();
                             }
                         })
                         .show();
@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.finish();
+                finish();
             }
         });
 
@@ -102,10 +102,10 @@ public class MainActivity extends Activity {
 
                 // Android 33 请求打开通知权限
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
+                    NotificationManager notificationManager = getSystemService(NotificationManager.class);
                     boolean enable = notificationManager.areNotificationsEnabled();
                     if (!enable) {
-                        activity.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 9527);
+                        requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 9527);
                         return;
                     }
                 }
@@ -126,11 +126,11 @@ public class MainActivity extends Activity {
                     intent.putExtra("message", Objects.equals(message.trim(), "") ? "-" : message);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        activity.startForegroundService(intent);
+                        startForegroundService(intent);
                     } else {
-                        activity.startService(intent);
+                        startService(intent);
                     }
-                    activity.finish();
+                    finish();
                 }
             }
         });
