@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(activity)
                         .setTitle("提示")
-                        .setMessage("本 APP 极度小巧（安装包不到 20 KB，安装后存储占用不到 200 KB）。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限。如过滤规则设置为重要，锁屏通知权限等；")
+                        .setMessage("此 APP 极度小巧（安装包不到 20 KB，安装后存储占用不到 200 KB）。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限。如过滤规则设置为重要，锁屏通知权限等；")
                         .setPositiveButton("确定", null)
                         .show();
             }
@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
                 String message = etMessage.getText().toString();
 
                 if (Objects.equals(title.trim(), "") && Objects.equals(message.trim(), "")) {
-                    Toast.makeText(activity, "至少保留一项内容", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "空空如也", Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("title", title);
@@ -122,8 +122,8 @@ public class MainActivity extends Activity {
                     editor.apply();
 
                     Intent intent = new Intent(activity, ForegroundService.class);
-                    intent.putExtra("title", Objects.equals(title.trim(), "") ? "-" : title);
-                    intent.putExtra("message", Objects.equals(message.trim(), "") ? "-" : message);
+                    intent.putExtra("title", Objects.equals(title.trim(), "") ? "勿忘" : title);
+                    intent.putExtra("message", Objects.equals(message.trim(), "") ? "勿忘" : message);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(intent);
