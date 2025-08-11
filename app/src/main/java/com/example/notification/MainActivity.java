@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(activity)
                         .setTitle("提示")
-                        .setMessage("此 APP 极度小巧（安装包不到 20 KB，安装后存储占用不到 200 KB）。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限。如过滤规则设置为重要，锁屏通知权限等；")
+                        .setMessage("本应用的安装包大小不到 20 kB，安装后存储占用不到 200 kB。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限（过滤规则设置为重要，打开锁屏通知权限等）；")
                         .setPositiveButton("确定", null)
                         .show();
             }
@@ -57,8 +57,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(activity)
                         .setTitle("提示")
-                        .setMessage("是否移除通知？")
-                        .setNeutralButton("清空内容并移除", new DialogInterface.OnClickListener() {
+                        .setMessage("是否清空内容和移除通知？")
+                        .setNeutralButton("清空并移除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 etTitle.setText("");
@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
                             }
                         })
                         .setNegativeButton("取消", null)
-                        .setPositiveButton("移除", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("仅移除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(activity, ForegroundService.class);
@@ -122,8 +122,8 @@ public class MainActivity extends Activity {
                     editor.apply();
 
                     Intent intent = new Intent(activity, ForegroundService.class);
-                    intent.putExtra("title", Objects.equals(title.trim(), "") ? "勿忘" : title);
-                    intent.putExtra("message", Objects.equals(message.trim(), "") ? "勿忘" : message);
+                    intent.putExtra("title", Objects.equals(title.trim(), "") ? "todo" : title);
+                    intent.putExtra("message", Objects.equals(message.trim(), "") ? "todo" : message);
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(intent);
