@@ -3,25 +3,37 @@ plugins {
 }
 
 android {
-    namespace 'com.example.notification'
+    namespace 'com.example.notido'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.example.notification"
+        applicationId "com.example.notido"
         minSdk 21
         targetSdk 35
         versionCode 1
         versionName "1.0.0"
     }
 
+    signingConfigs {
+        // 使用 Android 自动生成的 debug.keystore 签名
+        debugAsRelease {
+            storeFile file("${System.getenv('ANDROID_SDK_HOME') ?: System.getProperty('user.home')}/.android/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
     buildTypes {
         debug {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debugAsRelease
         }
     }
     compileOptions {

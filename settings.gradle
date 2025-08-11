@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Notification"
+rootProject.name = "NotiDo"
 include ':app'

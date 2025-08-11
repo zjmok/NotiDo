@@ -1,4 +1,4 @@
-package com.example.notification;
+package com.example.notido;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

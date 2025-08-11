@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.Notification" parent="android:Theme.DeviceDefault.Light.Dialog.NoActionBar">
+    <style name="Theme.NotiDo" parent="android:Theme.DeviceDefault.Light.Dialog.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
