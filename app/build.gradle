@@ -16,7 +16,7 @@ android {
 
     signingConfigs {
         // 使用 workflow 解码生成的 keystore 文件
-        debugAsRelease {
+        release {
             // workflow 获取
             storeFile file("keystore/release.jks")  // 解码文件对应此路径
             // gradle 获取，鸡蛋不要放在同一个篮子里
@@ -35,7 +35,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debugAsRelease
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

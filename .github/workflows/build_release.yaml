@@ -13,6 +13,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    environment: zjmok.jks # 指定环境，对应 GitHub Secrets 中的 zjmok.jks
+
     steps:
       - uses: actions/checkout@v4 # 拉取代码
       - name: Set up JDK 17
