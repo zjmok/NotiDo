@@ -27,15 +27,13 @@ jobs:
 #        with:
 #          sdk-version: '35.0.0'  # 设置 Android SDK
 #
-      # 生成 debug.keystore
-      - name: Generate debug.keystore
+      # https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#storing-base64-binary-blobs-as-secrets
+      # 解码 Base64 签名
+      - name: Decode Keystore
+        # 输出路径对应 app/build.gradle 脚本中的 storeFile 路径
         run: |
-          mkdir -p ~/.android
-          keytool -genkey -v \
-            -keystore ~/.android/debug.keystore \
-            -storepass android -alias androiddebugkey -keypass android \
-            -keyalg RSA -keysize 2048 -validity 10000 \
-            -dname "CN=Android Debug,O=Android,C=US"
+          mkdir -p app/keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore/release.jks
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
