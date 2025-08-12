@@ -13,7 +13,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    environment: zjmok.jks # 指定环境，对应 GitHub Secrets 中的 zjmok.jks
+    environment: zjmok.jks # 指定环境，对应仓库 Settings Environments 中的 environment 名称
 
     steps:
       - uses: actions/checkout@v4 # 拉取代码
