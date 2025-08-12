@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(activity)
                         .setTitle("提示")
-                        .setMessage("NotiDo 的安装包大小不到 20 kB，安装后存储占用不到 200 kB。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内魔改定制 ROM）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限（过滤规则设置为重要，打开锁屏通知权限等）；")
+                        .setMessage("NotiDo 的安装包大小不到 20 kB，安装后存储占用不到 200 kB。\n仅有的功能是展示一条无法直接移除的通知，可用作备忘。\n后台运行几乎不耗电。\n建议（特别针对国内厂商的系统）：\n1. 在多任务页面锁定任务防止被清理；\n2. 打开自启动和电池策略无限制等；\n3. 打开通知相关权限（过滤规则设置为重要，打开锁屏通知权限等）；")
                         .setPositiveButton("确定", null)
                         .show();
             }
