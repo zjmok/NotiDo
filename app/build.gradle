@@ -22,6 +22,13 @@ android {
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")
         }
+        // 使用 Android 自动生成的 debug.keystore 签名
+        debugAsRelease {
+            storeFile file("${System.getenv('ANDROID_SDK_HOME') ?: System.getProperty('user.home')}/.android/debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
     }
     buildTypes {
         debug {
@@ -33,6 +40,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.debugAsRelease
             signingConfig signingConfigs.release
         }
     }
