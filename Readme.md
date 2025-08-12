@@ -26,7 +26,7 @@ NotiDo 的安装包大小不到 20 kB，安装后存储占用不到 200 kB。
 
 ### 下载
 
-点击右侧 Release，点击 apk 安装包文件进行下载
+点击右侧 [Release](https://github.com/zjmok/NotiDo/releases)，点击 apk 安装包文件进行下载
 
 ## 安装包瘦身
 
