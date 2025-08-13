@@ -10,11 +10,8 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     environment: zjmok.jks # 指定环境，对应仓库 Settings Environments 中的 environment 名称
-
     steps:
       - uses: actions/checkout@v4 # 拉取代码
       - name: Set up JDK 17
@@ -33,9 +30,7 @@ jobs:
       # 解码 Base64 签名
       - name: Decode Keystore
         # 输出路径对应 app/build.gradle 脚本中的 storeFile 路径
-        run: |
-          mkdir -p app/keystore
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore/release.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > zjmok.jks
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

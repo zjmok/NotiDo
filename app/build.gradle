@@ -2,6 +2,29 @@ plugins {
     id 'com.android.application'
 }
 
+// 兼容本地开发和 workflow 脚本
+def getEnvOrLocal(String key) {
+    def value = System.getenv(key) // github secrets >  CI > gradle
+    if (value == null || value.isEmpty()) {
+        // 尝试从 local.properties 中获取
+        def localProperties = new Properties()
+        def localPropertiesFile = file("../local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.withInputStream { stream ->
+                localProperties.load(stream)
+            }
+        } else {
+            throw new FileNotFoundException("local.properties 文件不存在，请求队友助攻")
+        }
+        // 获取 key 的 value
+        value = localProperties.getProperty(key)
+    }
+    if (value == null || value.isEmpty()) {
+        throw new IllegalArgumentException("环境变量 或 local.properties 中缺少 ${key} 的值，请求队友助攻")
+    }
+    return value
+}
+
 android {
     namespace 'com.example.notido'
     compileSdk 35
@@ -15,14 +38,13 @@ android {
     }
 
     signingConfigs {
-        // 使用 workflow 解码生成的 keystore 文件
         release {
-            storeFile file("keystore/release.jks") // 解码文件对应此路径
-            storePassword System.getenv("KEYSTORE_PASSWORD")
-            keyAlias System.getenv("KEY_ALIAS")
-            keyPassword System.getenv("KEY_PASSWORD")
+            storeFile file("../zjmok.jks") // 密钥库文件路径，本地开发直接放到此路径，CI 环境脚本解密输出到此路径
+            storePassword getEnvOrLocal("KEYSTORE_PASSWORD")
+            keyAlias getEnvOrLocal("KEY_ALIAS")
+            keyPassword getEnvOrLocal("KEY_PASSWORD")
         }
-        // 使用 Android 自动生成的 debug.keystore 签名
+        // Android 自动生成的 debug.keystore 签名
         debugAsRelease {
             storeFile file("${System.getenv('ANDROID_SDK_HOME') ?: System.getProperty('user.home')}/.android/debug.keystore")
             storePassword "android"
